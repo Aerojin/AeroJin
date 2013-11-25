@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>滚动条</title>
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<style type="text/css">		
+		body{margin:0px; padding:0px;}
+		.hidden{display: none;}
+		#wrapper{z-index:110; position:fixed;left: 0px; top: 0px;}
+		#scroll{position: fixed; top: 0px; right: 0px; width: 20px; height: 100%; border: solid 1px #ccc; padding: 1px}	
+		#onScroll{background: #999; width: 100%; height: 100%; position: absolute; top: 0px;}	
+	</style>
+</head>
+<body  style="padding-right: 17px; margin: 0px; overflow: hidden">
+	<div id="wrapper">
+		<div id="panel">
+			asd21asd4a56sdasd485asd12as4d
+			<br/>
+			asd21asd4a56sdasd485asd12as4d
+			<br/>
+			asd21asd4a56sdasd485asd12as4d
+			<br/>
+			asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/><br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/><br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/><br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/><br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/><br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/><br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/><br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>asd21asd4a56sdasd485asd12as4d
+			
+			<br/>asd21asd4a56sdasd485asd12as4d
+			<br/>
+			
+		</div>
+		<div id="scroll" class="hidden">			
+			<div id="onScroll"></div>
+		</div>
+	</div>
+<script type="text/javascript">
+	
+	var iScroll = function(options){
+		this.wrapper = $('#' + options.wrapper);
+		this.content = $('#' + options.content);
+		this.width = options.width || $(window).width();
+		this.height = options.height || $(window).height();		
+		this.window = $(window);
+		this.scroll = 0;
+		this.max = 100;
+		this.min = 0;
+	};	
+	
+	$.extend(iScroll.prototype, {
+		init: function(){
+			
+			this.initWrap(); //设置dom初始值	
+			this.regEvent();//注册事件
+		},
+		initWrap: function(){
+			this.setHW();
+		},
+		regEvent: function(){
+			var _this = this;
+			
+			$(window).resize(function(){
+				_this.setHW();		
+				_this.wrapper.css({'width': _this.width, 'height': _this.height});
+			});	
+
+			$('body').bind('mousewheel', function(event) {							
+				_this.scroll = event['originalEvent'].wheelDelta < 0 ? _this.scroll + 1 : _this.scroll - 1;			
+				_this.setScroll();
+			});
+
+			$('body').bind('DOMMouseScroll', function(event){				
+				_this.scroll = event['originalEvent'].detail < 0 ? _this.scroll - 1 : _this.scroll + 1;
+				_this.setScroll();
+			});		
+		},
+		setHW: function(){
+			this.width = this.window.width();
+			this.height = this.window.height();
+
+			this.scrollHeight = this.height / this.content.height();
+
+			if(this.scrollHeight < 1){
+				var progress = Math.round(this.scrollHeight * 100);
+				this.max = 100 - progress;
+				$('#onScroll').css({'height': progress + '%'});				
+				$('#scroll').removeClass('hidden')
+			}else{
+				$('#scroll').addClass('hidden');
+			}
+		},
+		setScroll: function(){
+
+			this.scroll = this.scroll > this.max ? this.max : this.scroll;
+			this.scroll = this.scroll < this.min ? this.min : this.scroll;
+			$('#onScroll').css({'top': this.scroll + '%'});
+		}
+		
+	});
+
+
+	var myscroll = new iScroll({
+		'wrapper': 'wrapper',
+		'content': 'panel'
+	});
+
+	myscroll.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>无限级联动</title>
+	<script type="text/javascript"  src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/json-data.js"></script>
+	<style type="text/css">
+	body{font-family: "微软雅黑";color: #7d7d7d;width: 980px; margin: 0px auto;}
+	h1{color: #0092d3;display: block;font-size: 32px;font-weight: bold;height: 42px;position: relative;text-align: center;}
+	ul{margin: 0;padding: 0;text-align: left;vertical-align: top;}
+	ul li{margin: 0;padding: 0;text-align: left;vertical-align: top;display: list-item;vertical-align: middle;}
+	.wrapper{position: relative; display: inline-block;}
+	.list{z-index: 99999;background-color: #fff;list-style: none;display: block;position: absolute;top: 100%;width: 100%;_width: 250px;left: 0px;border: 1px solid #ccc;line-height: 30px;font-size: 14px;box-shadow: 0 0 10px rgba(0,0,0,0.2);padding: 2px;max-height: 200px;_height: expression(eval(this.offsetHeight>200?200:this.offsetHeight));overflow: auto;cursor: pointer;}
+	.list li{padding: 0 5px;_width: 222px;}
+	.list li b{vertical-align: baseline; color: red;}
+	.list li:link{color:#7d7d7d;background-color:#fff;}
+	.list li:visited{color:#7d7d7d;background-color:#fff;}
+	.list li:hover, .selected{background-color: #576b9c;color: #fff;font-weight: bold;}
+	.hidden{display:none;}
+	</style>
+</head>
+<body>
+	<h1>国家省份城市联动</h1>
+	<ul>
+		<li>
+			<span> 省份 </span>
+			<div class="wrapper">
+				<input class="suggestselect-input" type="text">
+				<ul class="list hidden"></ul>
+			</div>
+			<span> 市/县 </span>
+			<div class="wrapper">
+				<input class="suggestselect-input" type="text">
+				<ul class="list hidden"></ul>
+				</div>
+			<span> 区 </span>
+			<div class="wrapper">
+				<input class="suggestselect-input" type="text">
+				<ul class="list hidden"></ul>
+			</div>
+		</li>
+	</ul>
+<script type="text/javascript">
+	var comBox = function (options) {
+		this.input = options.input;
+		this.comBox = options.comBox;
+		this.warp = options.warp;
+		this.data = options.data;
+		this.index = options.index || -1;
+		this.findTag = options.findTag || 'li';
+		this.selectedClass = this.selectedClass || 'selected';
+		this.eventType = options.isIE ? 'propertychange' : 'input';
+		
+	};
+	
+	comBox.prototype = {
+		init: function(){
+			var _this = this;
+			
+			this.input.keydown(function(e){
+				if(e.keyCode == 38 || e.keyCode == 40){
+					_this.setIndex(e.keyCode);
+				}else if(e.keyCode == 13){
+					_this.select();
+				}
+			});
+			
+			this.input.focus(function(){
+				_this.search($.trim($(this).val()));
+			});
+			
+			this.input.blur(function(){
+				setTimeout(function(){ _this.hide() }, 200);
+			});	
+
+			this.input.click(function(){
+				_this.search($.trim($(this).val()));
+			});
+		
+			this.input.bind(this.eventType, function(){
+				_this.search($.trim($(this).val()));
+			});
+		
+			
+			this.comBox.delegate(this.findTag, 'click', function() {
+				_this.select();
+			});
+			
+			this.comBox.delegate(this.findTag, 'mouseenter', function() {
+				_this.index = _this.comBox.find(_this.findTag).index($(this));
+				_this.move();	
+			});
+		},
+		setIndex: function(keyCode){
+			var li = this.comBox.find(this.findTag);
+			var num = keyCode == 38 ? this.index - 1 : this.index + 1 ;	
+			this.index = num < 0 ? 0 : num >= li.length ? li.length - 1 : num;
+			
+			this.move();
+			
+			var top = (this.index < 4 ? 0 : this.index - 4) * ($('li').get(0).offsetHeight);			
+			this.warp.scrollTop(top);	
+		},
+		move: function(){
+			var li = this.comBox.find(this.findTag);						
+			li.removeClass(this.selectedClass).eq(this.index).addClass(this.selectedClass);	
+
+			if(li.length){
+				this.show();
+			}else{
+				this.hide();
+			}	
+		},
+		search: function(val){			
+			var list = [];					
+			for(var i = 0, len = this.data.length; i < len; i++){
+				if(this.data[i].indexOf(val) > -1){
+					var item = '<' + this.findTag + ' data-value=' + this.data[i] + '>' + this.data[i].replace(val, '<b>' + val + '</b>') + '</' + this.findTag + '>';					
+					list.push(item);										
+				}
+			}
+
+			if(list.length){
+				this.index = -1;
+				this.comBox.html(list.join('\n'));
+				this.show();
+			}else{
+				this.comBox.html('');
+				this.hide();
+			}
+			
+		},
+		select: function(){
+			var val = this.comBox.find(this.findTag).eq(this.index).data('value');
+			this.input.val(val);
+			this.hide();
+			this.onSelect(val);
+		},
+		onSelect: function(){
+		
+		},
+		show: function(){			
+			this.warp.show();
+		},
+		hide: function(){
+			this.warp.hide();
+		}	
+	};
+	
+	var LINK = {
+		init:function(){
+			var _this = this;
+			
+			_this.ui = {
+				warp: $('.list'),
+				wrapper: $('.wrapper'),
+				input: $('.suggestselect-input')				
+			};
+			_this.formatData();
+			_this.fillData();
+			
+			_this.action(0, _this.ui.input.length, '');
+		},
+		formatData: function(){
+			this.data = [];
+			for(var item in chinaJSON){
+				this.data.push(item);
+			}
+		},
+		action: function(parent, max, val){
+			var _this = this;
+			
+			var options = {
+				input: this.ui.input.eq(0),
+				warp: this.ui.warp.eq(0),
+				comBox: this.ui.warp.eq(0),
+				data: this.data,
+				findTag: 'li',
+				selectedClass: 'selected',
+				isIE:!$.support.leadingWhitespace
+			};			
+			
+			this.comBox = new comBox(options);
+			this.comBox.onSelect = function(value){
+				_this.action(parent + 1, val);
+			};
+			
+			this.comBox.init();
+		},
+		fillData: function(options){
+			var _this = this;
+			
+			var options = {
+				input: this.ui.input.eq(0),
+				warp: this.ui.warp.eq(0),
+				comBox: this.ui.warp.eq(0),
+				data: this.data,
+				findTag: 'li',
+				selectedClass: 'selected',
+				isIE:!$.support.leadingWhitespace
+			};
+			
+			this.comBox = new comBox(options);
+			this.comBox.onSelect = function(val){
+				var data = [];
+				for(var item in chinaJSON[val]){
+					data.push(item);
+				}
+				
+				var options1 = {
+					input: _this.ui.input.eq(1),
+					warp: _this.ui.warp.eq(1),
+					comBox: _this.ui.warp.eq(1),
+					data: data,
+					findTag: 'li',
+					selectedClass: 'selected',
+					isIE:!$.support.leadingWhitespace
+				};
+				
+				
+				var cBox = new comBox(options1);
+				cBox.onSelect = function(val2){
+					var data = [];
+					for(var item in chinaJSON[val][val2]){
+						data.push(item);
+					}
+					
+					var options2 = {
+						input: _this.ui.input.eq(2),
+						warp: _this.ui.warp.eq(2),
+						comBox: _this.ui.warp.eq(2),
+						data: data,
+						findTag: 'li',
+						selectedClass: 'selected',
+						isIE:!$.support.leadingWhitespace
+					};
+					
+					var box =  new comBox(options2);
+					
+					box.init();
+				};
+				cBox.init();
+			};
+			this.comBox.init();
+		}
+	};
+
+	$(function(){ LINK.init(); });	
+</script>
+</body>
+</html>

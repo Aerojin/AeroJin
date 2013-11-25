@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>放大镜</title>
+	<style type="text/css">
+		body{margin:0px;padding:0px;}
+		.warp{width:350px;height:350px;border:solid 1px #aaa;position:relative;left:50px; top:50px;}
+		.move{width:175px;height:175px;border:solid 1px #aaa;background: #FEDE4F 50% top no-repeat;opacity: 0.5;cursor: move;left:0px;top:0px;position: absolute;}
+		.show{width:400px;height:400px;border:solid 1px #ccc;position:absolute;left:410px; top:50px; overflow: hidden;}
+		.hidden{display:none;}
+	</style>	
+</head>
+<body>
+	<div id="warp" class="warp">
+		<img src="img/small.jpg" width="350px" height="350px">
+		<div id="move" class="move hidden"></div>
+	</div>
+	<div class="show hidden" id="show">
+		<img id="bigImg" src="img/big.jpg">
+	</div>
+	
+	<div id="test" class="hidden" style="position:relative;left:500px;">
+	
+	</div>
+
+<script type="text/javascript">
+	var MG = {		
+		init: function(){
+			var _this = this;
+			
+			_this.ui = {
+				warp: _this.byID('warp'),
+				move: _this.byID('move'),
+				show: _this.byID('show'),
+				bigImg: _this.byID('bigImg')
+			}
+			
+			_this.ui.warp.onmouseover = function(e){
+				_this.show(_this.ui.move);
+				_this.show(_this.ui.show);
+				_this.move(e);
+			};
+			
+			_this.ui.warp.onmouseout = function(){
+				_this.hide(_this.ui.move);
+				_this.hide(_this.ui.show);
+			};
+			
+			_this.ui.warp.onmousemove = function(e){
+				_this.move(e);
+			};
+
+			this.maxTop = (this.ui.warp.offsetHeight / 2) - 2;
+			this.maxLeft = (this.ui.warp.offsetWidth / 2) - 2;
+		},
+		move: function(e){
+			var mouseX = e.pageX - this.ui.warp.offsetLeft;
+				mouseY = e.pageY - this.ui.warp.offsetTop;				
+
+			var width = this.ui.move.offsetWidth - 2,
+				height = this.ui.move.offsetHeight - 2;
+			
+			var left = mouseX - (width / 2),
+				top = mouseY - (height / 2);
+				
+			if(left <= 0){
+				left = 0;
+			}else if(left >= this.maxLeft){
+				left = this.maxLeft;
+			}	
+			
+			if(top <= 0){
+				top = 0;
+			}else if(top >= this.maxTop){
+				top = this.maxTop;
+			}
+			
+			var marTop = ((this.ui.show.offsetHeight - 2) / height) * -top,
+				marLeft = ((this.ui.show.offsetWidth - 2) / width) * -left;
+				
+			this.setStyle(this.ui.move, {'left': left + 'px', 'top': top + 'px'});
+			this.setStyle(this.ui.bigImg,{'marginLeft': marLeft + 'px', 'marginTop': marTop + 'px'});
+		},
+		byID: function(id){
+			return document.getElementById(id);
+		},
+		show: function(dom){
+			this.setStyle(dom, {'display':'block'});
+		},
+		hide: function(dom){
+			this.setStyle(dom, {'display':'none'});
+		},
+		setStyle: function(dom, item){
+			for(var s in item){
+				dom.style[s] = item[s];
+			}
+		}
+	};
+	
+	MG.init();
+</script>
+</body>
+</html>

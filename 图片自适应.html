@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>不规格图片自适应</title>
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="js/data.js"></script>
+	<style type="text/css">
+	body{margin:0px; padding:0px; background-color:#ccc;}
+	.content{margin:5px;background-color:#fff;text-align:center;padding-bottom:10px;}
+    .content img{margin-top:10px;}
+	</style>
+</head>
+<body>
+	<div id="content" class="content"></div>
+    <input id="btnMore" type="button" value="加载更多..." style="width:100%;height:35px;" />
+	<div style="width:100%;height:50px;"></div>
+<script type="text/javascript">
+	var AI = {
+		curPage: 0,
+        margin: 25,
+		init: function() {
+			var _this= this;
+			
+			_this.ui = {
+				btnMore: $('#btnMore'),
+				content: $('#content')				
+			};
+			
+			_this.ui.btnMore.click(function() {
+				_this.more();
+			});
+			
+			$(window).resize(function() {
+				_this.reSize();
+			});
+			
+			_this.sWidth = $(window).width() - 100;	
+			_this.format();
+			_this.nextPage();					
+		},
+		format: function () {			
+			this.table = [];
+			
+			for (var i = 0, len = listData.rows.length; i < len; i++) {
+				var row = [], tmpRow = listData.rows[i].row;
+				
+				for (var k = 0; k < tmpRow.length; k++) {
+					var data = tmpRow[k].sizes.c;
+					row.push(data);
+				}
+				
+				this.table.push(row);
+			}
+		},
+		nextPage: function () {
+			var page = this.curPage, tmp = "<div>";
+			var data = this.auto(this.table[page]);
+
+			for (var i = 0, len = data.length; i < len; i++) {
+				tmp += '<img src="' + data[i].url + '" width="' + data[i].width + 'px" height="' + data[i].height + 'px" style="padding-left:' + data.paddinRight + 'px" />';
+			}
+
+			tmp += '</div>';
+			this.ui.content.append(tmp);
+		},
+		auto: function (list) {
+			var w = 0, count = 0, data = list, paddinRight = this.margin / list.length;
+			
+			for (var i = 0, len = list.length; i < len; i++) {
+				count = count + parseInt(list[i].width, 10) / parseInt(list[i].height, 10);
+			}
+
+			w = this.sWidth / count;
+
+			for (var k = 0, len = list.length; k < len; k++) {
+				var dv = w / parseInt(list[k].height, 10);
+				data[k].height = parseInt(list[k].height, 10) * dv;
+				data[k].width = parseInt(list[k].width, 10) * dv;
+				data.paddinRight = paddinRight;
+			}
+
+			return data;
+		},		
+		more: function(){
+			this.curPage++;
+            if (this.curPage < 12) {
+				this.nextPage();
+			} else {
+				alert('没有更多数据!');
+			};
+		},
+		reSize: function(){
+			this.sWidth = $(window).width() - 80;
+			this.ui.content.html('');
+			for (var i = 0, len = this.curPage; i <= len; i++) {
+				this.curPage = i;
+				this.nextPage();
+			}
+		}
+	};
+
+	$(function() { AI.init(); });
+</script>
+</body>
+</html>

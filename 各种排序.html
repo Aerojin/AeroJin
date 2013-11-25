@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>各种排序</title>
+	<style type="text/css">
+		body{margin: 0px; padding: 0px;}
+		h1{font-size: 35px; font-weight: bold;}
+		.wrapper{width:1200px; margin: 30px auto;}
+		.wrap{width: 100%; height:100px;}
+		.mod{width: 7px; height:100%; background: #ccc; margin: 0 1px; display: inline-block; }
+		.mod.link{background:#ccc;}
+		.mod:hover{background:#8AA3F9;}
+		.mod:visited {background:#ccc;}
+		.focus{background:#8AA3F9 !important}
+		.action{background: #666;}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<h1>排序动画</h1>
+		<div class="body">
+			<p>排序速度: <input value="170" max="195" min="1" id="speed" type="range"></p>
+			<p>数组长度: <input type="text" id="txtLen" value="50" /> <input type="button" value="生成数组" id="btnRelease" /></p>
+			<p>待排数组: <input type="text" id="txtArray" style="width: 1000px" /></p>
+			<p>
+				<input type="button" value="冒泡排序" id="btnBubbleSort" />
+				<input type="button" value="快速排序" id="btnQuickSort" />
+			</p>
+		</div>
+		<div class="wrap" id="wrap">
+			<div class="mod" style="height:33%"></div><div class="mod" style="height:55%"></div><div class="mod"></div>
+			
+		</div>
+		<div style="clear: both;"></div>
+	</div>
+<script type="text/javascript">
+	var Sort = {
+		init: function(){
+			this.ui = {};
+			this.ui.wrap = this.byID('wrap');
+			this.ui.speed = this.byID('speed');
+			this.ui.txtLen = this.byID('txtLen');
+			this.ui.txtArray = this.byID('txtArray');			
+			this.ui.btnRelease = this.byID('btnRelease');	
+			this.ui.btnQuickSort = this.byID('btnQuickSort');
+			this.ui.btnBubbleSort = this.byID('btnBubbleSort');
+			
+			
+			this.random();
+			this.animation = null;
+			
+			this.actionList = {
+				'bubble': {
+					'animateSort': 'bubbleAnimation'
+				},
+				quick: {
+					'animateSort': 'quickAnimation'
+				}
+			};
+			
+			
+			
+			this.regEvent();			
+			
+		},
+		regEvent: function(){
+			var _this = this;
+			
+			_this.ui.btnRelease.onclick = function(){
+				_this.random();				
+			};
+			
+			_this.ui.btnBubbleSort.onclick = function(){
+				_this.sort(_this.actionList.bubble);
+			};
+			
+			_this.ui.speed.onchange = function(){
+				_this.animation.setSpeed(200 - this.value);
+			}
+			
+			_this.ui.btnQuickSort.onclick = function(){
+				_this.sort(_this.actionList.quick);
+			};
+		},
+		random: function(){
+			
+			var objArr = {};			
+			this.array = [];
+			this.length = Math.floor(this.ui.txtLen.value);
+			
+			while(this.array.length < this.length){
+				var num = Math.floor(Math.random() * this.length);				
+				if(!objArr[num]){
+					objArr[num] = 1;
+					this.array.push(num);
+				}
+			}			
+			
+			this.ui.wrap.innerHTML = '';
+			this.ui.txtArray.value = '[' + this.array.join(',') + ']';						
+		},
+		byID: function( id ){
+			return document.getElementById(id);
+		},
+		setStyle: function( dom, options ){
+			for(var s in options){
+				dom.style[s] = options[s];
+			}
+		},
+		getArray: function(){
+			var arr = this.ui.txtArray.value;
+			
+			return JSON.parse(arr);
+		},
+		getSpeed: function(){
+			return 200 - this.ui.speed.value;
+		},
+		sort: function( obj ){
+			var array = this.getArray();
+			
+			this.animation && this.animation.stop();
+			this.animation = new animation({wrap: this.ui.wrap,	array: array});
+			this[obj.animateSort](array, this.animation);
+			this.animation.run(this.getSpeed());
+		},
+		bubbleAnimation: function(array, animation){
+			//冒泡排序
+			for(var i = 0; i < this.length; i++){
+				animation.addAction(i);
+				for(var j = i + 1; j < this.length; j++){
+					animation.addAction(j);
+					
+					if(array[i] > array[j]){
+						var num = array[i];
+						array[i] = array[j];
+						array[j] = num;
+						
+						animation.addChange(i, j);
+					}					
+					animation.addBlur(j);	
+				}				
+				animation.addBlur(i);
+			}
+		},
+		quickAnimation: function(array, animation){			
+			this.quickSort(array, 0, array.length - 1, animation);			
+		},
+		quickSort: function(array, l, r, animation){
+			//快排
+			if( l < r){
+				var i = l,
+					j = r,
+					x = array[l];
+				animation.addActionFragment(i, j);
+				while(i < j){
+					while(i < j && array[j] >= x)
+					{
+						animation.addAction(j);						
+						animation.addBlur(j);
+						j--;
+					}
+					
+					if(i < j){
+						array[i] = array[j];
+						animation.addChange(i, j);
+						i++;
+					}
+					
+					while(i < j && array[i] < x){
+						animation.addAction(i);						
+						animation.addBlur(i);
+						i++;
+					}
+					if(i < j){
+						array[j] = array[i];
+						animation.addChange(i, j);
+						j--;
+					}
+				}
+				
+				animation.addBlurFragment();
+				array[i] = x;
+				animation.addChange(i, j);
+				
+				if( i-l >1 ) 
+					this.quickSort(array, l, i - 1, animation);
+					
+				if( r-i >1 )
+					this.quickSort(array, i + 1, r, animation);
+			}			
+		}
+	}
+	
+	var animation = function(options){
+		this.animte = [];
+		this.index = -1;
+		this.wrap = options.wrap;
+		this.array = options.array.slice();
+		this.length = this.array.length;
+		this.speed = options.speed || 5;
+		this.init();
+	}
+	
+	animation.prototype = {
+		init: function(){		
+			
+			this.getMax();
+			this.createDom();
+		},
+		getMax: function(){
+			this.max = Math.max.apply(Math, this.array);
+		},
+		getHeight: function( index ){
+			return (this.array[index] / this.max) * 100; 
+		},
+		createDom: function(){
+		
+			var html = '';	
+			for(var i = 0; i < this.length; i++){				
+				html +='<div class="mod" style="height:' + this.getHeight(i) + '%;"></div>';		
+			}			
+			this.wrap.innerHTML = html;
+			this.list = this.wrap.getElementsByClassName('mod');
+		},
+		actionOne: function( index ){
+			this.list[index].className += ' focus';
+		},
+		blurOne: function( index ){
+			this.list[index].className = this.list[index].className.replace('focus', '');
+		},
+		actionFragment: function(start, end){
+			this.start = start;
+			this.end = end;
+			for(var i = start; i <= end; i++){
+				this.list[i].className += ' action';
+			}
+		},
+		blurFragment: function(start, end){
+			var s = start || this.start;
+			var e = end || this.end;
+			for(var i = s; i <= e; i++){
+				this.list[i].className = this.list[i].className.replace('action', '');
+			}
+		},
+		exChange: function(index1, index2){
+			var num = this.array[index1];
+			this.array[index1] = this.array[index2];
+			this.array[index2] = num;
+			
+			this.list[index1].style.height = this.getHeight(index1) + '%';
+			this.list[index2].style.height = this.getHeight(index2) + '%';			
+		},
+		addAction: function(index){
+			this.animte.push({
+				'type': 'actionOne',
+				'data': [index]
+			});
+		},
+		addBlur: function(index){
+			this.animte.push({
+				'type': 'blurOne',
+				'data': [index]
+			});
+		},
+		addChange: function(index1 ,index2){
+			this.animte.push({
+				'type': 'exChange',
+				'data': [index1 ,index2]
+			});		
+		},
+		addActionFragment: function(i, j){
+			this.animte.push({
+				'type': 'actionFragment',
+				'data': [i, j]
+			});
+		},
+		addBlurFragment: function(i, j){
+			this.animte.push({
+				'type': 'blurFragment',
+				'data': [i, j]
+			});
+		},
+		run: function( speed ){
+			var _this = this;
+			
+			
+			_this.speed = speed || _this.speed;
+			_this.interval && clearInterval(_this.interval);
+			_this.interval = setInterval(function(){
+				_this.index++;
+				
+				if(_this.index < _this.animte.length){
+					_this[_this.animte[_this.index].type].apply(_this, _this.animte[_this.index].data);				
+				}else{
+					clearInterval(_this.interval);
+				}			
+				
+			}, _this.speed);
+		},
+		setSpeed: function(speed){
+			this.speed = speed;
+			this.run();
+		},
+		stop: function(){
+			this.interval && clearInterval(this.interval);	
+		}
+		
+	};
+	
+	
+	
+	document.body.onload = function(){
+		Sort.init();
+	};
+</script>
+</body>
+</html>

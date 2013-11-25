@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>查看大图</title>
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<style type="text/css">
+		body{margin:0px;padding: 0px;}
+		.warp{width:300px;height:100%;margin:50px auto;border:solid 1px #aaa;padding:5px;}
+		.warp img{margin-bottom:5px;overflow: auto; cursor: pointer;}
+		.view{max-width:760px;height:100%; margin: 50px auto;}
+		.content{overflow: auto; z-index:110; position:fixed;left: 0px; top: 0px; cursor: pointer;}
+		.backgrounds{background:#000; opacity:0.5; width:100%; height:100%; position:absolute; left:0px; top:0px; z-index:100; cursor: pointer;}
+		.hidden{display:none;}
+	</style>
+</head>
+<body>
+	<div class="warp" id="warp">
+		<img src="img/1.jpg" width="100%">
+		<img src="img/2.jpg" width="100%">
+		<img src="img/3.jpg" width="100%">
+	</div>
+	<div id="content" class="content hidden">
+		<div id="view" class="view">
+			<img src=""  style="max-width:760px"/>
+		</div>
+	</div>
+	<div id="background" class="backgrounds hidden"></div>
+	
+<script type="text/javascript">
+	var VI = {
+		init: function(){
+			var _this = this;
+			
+			_this.ui = {
+				warp: $('#warp'),
+				view: $('#view'),
+				img: $('#warp img'),
+				content: $('#content'),
+				html: $('html'),
+				background: $('#background')
+			};
+			
+			_this.ui.background.click(function(){
+				_this.close();
+			});
+			
+			/*
+			_this.ui.background.onclick = function() {
+				_this.hide(_this.ui.content);
+				_this.hide(_this.ui.background);
+				_this.setStyle(_this.html, {'paddingRight': '0px', 'margin': '0px', 'overflowY': 'auto'});
+			};
+			*/
+			
+			_this.ui.content.click(function(){
+				_this.close();
+			});
+			
+			/*
+			_this.ui.content.onclick = function(){
+				_this.hide(_this.ui.content);
+				_this.hide(_this.ui.background);
+				_this.setStyle(_this.html, {'paddingRight': '0px', 'margin': '0px', 'overflowY': 'auto'});
+			};
+			*/
+			_this.ui.img.click(function(){
+				_this.open($(this));
+			});
+			
+			/*
+			for(var i = 0; i < _this.ui.img.length; i++){
+				_this.ui.img[i].onclick = function() {
+					
+					var src = this.getAttribute('src');
+					var img = '<img src=' + src + ' max-width="760px"/>';
+					_this.ui.view.innerHTML = img;
+					_this.setStyle(_this.html,{'paddingRight': '17px','margin': '0px', 'overflowY': 'hidden'});
+					_this.show(_this.ui.content);
+					_this.show(_this.ui.background);
+					
+					_this.setStyle(_this.ui.view,{'width': $(_this.ui.view).find('img').width() + 'px','height': $(_this.ui.view).find('img').height() + 'px'});
+				};
+			}
+			*/
+			
+			//_this.setSize();	
+		},
+		setSize: function(){	
+			this.ui.html.css({'padding-right': '17px','margin': '0px', 'overflow-y': 'hidden'});
+			this.ui.content.css({'width': $(window).width() + 'px', 'height': $(window).height() + 'px'});
+			this.ui.background.css({'width': $(document).width()  + 'px', 'height': $(document).height() + 'px'});			
+		},
+		close: function(){
+			this.ui.content.hide();
+			this.ui.background.hide();
+			this.ui.html.css({'padding-right': '0px', 'margin': '0px', 'overflow-y': 'auto'});
+		},
+		open: function( $this ){
+			this.setSize();
+			var img = this.ui.view.find('img');
+			
+			img.attr('src', $this.attr('src'));
+			this.ui.content.show();
+			this.ui.background.show();
+			
+			this.reSize(img);
+			
+			this.ui.view.css({'width': img.width() + 'px','height': img.height() + 'px'})
+		},
+		reSize: function(img){
+			var width = img.width();
+			
+			if(width > 760){
+				img.css({'width':'760px', 'height': ''});
+			}
+		}		
+	};
+	
+	$(function(){ VI.init(); });
+</script>	
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>Transitions功能的使用示例</title>
+	<style type="text/css">
+		
+		div{
+			background-color: #ffff00;
+			width: 300px;
+			color: #000;
+			-webkit-transition: background-color 1s linear, color 1s linear, width 1s linear;
+			-moz-transition: background-color 1s linear, color 1s linear, width 1s linear;
+			-o-transition: background-color 1s linear, color 1s linear, width 1s linear;
+		}
+		
+		div:hover{
+			background-color: #003366;
+			color: #fff;
+			width:400px;
+		}
+		/*
+		@-webkit-keyframes mycolor{
+			0%{
+				width: 100px;
+				height: 100px;
+				background-color: #ccc;
+			}
+			50%{
+				background-color: #555;
+			}
+			100%{
+				width: 500px;
+				height: 500px;
+				background-color: red;
+			}
+		}
+		
+		div{
+			background-color: red;
+			width: 500px;
+			height: 500px;
+			-webkit-animation-name: mycolor;
+			-webkit-animation-duration: 5s;
+			-webkit-animation-function: ease-out;
+		}
+		*/
+	</style>
+</head>
+<body>
+	<div>示例文字</div>
+</body>
+</html>

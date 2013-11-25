@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>坐标滚动</title>	
+	<style  type="text/css">
+		body{margin: 0px;}
+		.content{width:980px; margin: 5px auto; height: 100%;}
+		.wrap{width: 440px; height: 400px; margin: 0px auto; overflow: hidden; cursor: pointer;}
+	</style>
+
+</head>
+<body>
+	<div class="content">
+		<div class="wrap" id="wrap">
+			<img src="img/psb.jpg">
+		</div>	
+	</div>
+
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+	var SR = {
+		init: function(){
+
+			this.ui = {};
+			this.ui.wrap 	= $('#wrap');
+			this.ui.image 	= $('#wrap img');
+
+			this.regEvent();
+		},
+		regEvent: function(){
+			var _this = this;
+
+			_this.ui.wrap.mousemove(function(event) {
+				_this.move($(this), event);				
+			});
+
+			_this.ui.wrap.mouseleave(function(event) {
+				_this.interval && clearInterval(_this.interval);
+			});
+
+			var width 		= _this.ui.wrap.width();
+			var height 		= _this.ui.wrap.height();
+			var offset 		= _this.ui.wrap.offset();
+			var imgWidth 	= _this.ui.image.width();
+			var imgHeight 	= _this.ui.image.height();
+
+			_this.minUp 	= offset.top;
+			_this.maxUp 	= height / 2 + offset.top;
+
+			_this.minDown 	= height / 2 + offset.top;
+			_this.maxDown 	= height + offset.top;
+
+			_this.marginY 	= 0;
+			_this.marginX 	= 0;
+
+			_this.min 		= 0;
+			_this.max 		= height - imgHeight;
+		},
+		move: function(source, event){
+			var y = event.pageY;
+
+			this.interval && clearInterval(this.interval);
+
+			if(y >= this.minUp && y < this.maxUp){
+				this.setDown();
+			}
+
+			if(y >= this.minDown && y < this.maxDown){
+				this.setUp();
+			}		
+		},
+		setUp: function(){
+			var _this = this;
+
+			_this.interval = setInterval(function(){
+				_this.marginY--;
+				_this.marginY = _this.marginY <= _this.max ? _this.max : _this.marginY;
+
+				if(_this.marginY == _this.max){
+					clearInterval(_this.interval);
+				}
+
+				_this.ui.image.css({'margin-top': _this.marginY});
+			}, 10);
+		},
+		setDown: function(){
+			var _this = this;
+
+			_this.interval = setInterval(function(){
+				_this.marginY++;
+				_this.marginY = _this.marginY >= _this.min ? _this.min : _this.marginY;
+
+				if(_this.marginY == _this.min){
+					clearInterval(_this.interval);
+				}
+
+				_this.ui.image.css({'margin-top': _this.marginY});
+			}, 10);							
+		}
+	};
+
+	$(function(){ SR.init(); });
+</script>
+</body>
+</html>

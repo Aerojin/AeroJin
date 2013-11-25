@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>瀑布流</title>
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+	<style type="text/css">
+		body{background: #E8E7E3;}		
+		*{margin:0px; padding: 0px;}
+		h1{text-align: center;margin-bottom: 10px;}
+		/*设置每一个瀑布流块*/
+        #wrap .pin{
+            width:220px;
+            height: auto;
+            /*padding: 15px 0px 0px 15px;*/ /*上 右 下 左*/
+            float: left;
+        }
+        /*设置每一个瀑布流块中的图像样式*/
+        #wrap .box{
+            width: 200px;
+            height: auto;
+            padding: 9px;
+            background: #FFF;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 6px #ccc; /*中间投影*/
+            border-radius: 5px; /*圆角*/
+        }
+        #wrap .pin .box img{
+            width: 200px;
+
+        }
+		#wrap{position: relative; min-height: 600px; }
+		.hidden{display:none;}
+		.loading{text-align: center;  height:35px; width:100%; font-size: 20px; background:#fff; font-weight: bolder; padding-top: 15px; display:none;}
+	</style> 
+</head>
+<body>
+
+	<div class="wrapper" id="main">
+		<h1>亮瞎眼的瀑布流</h1>
+		<div id="wrap">			
+	
+		</div>
+		<div class="loading">正在加载中...</div>
+	</div>
+	
+	<script type="text/javascript">
+		var Falls = {
+			fristPage: 18,
+			pageSize: 10,
+			pageIndex: 1,
+			minWidth: 720,
+			compareArray: {height:[],left:[]},
+			init: function(){
+				this.ui = {};
+				this.ui.main = $('#main');
+				this.ui.wrap = $('#wrap');
+				this.window = $(window);
+				
+				this.ui.wrap.html('');
+				
+				this.setWrap();
+				this.regEvent();				
+				this.loadPage(this.fristPage);
+			},
+			setWrap: function(){
+				this.width = 230;
+				this.imgWidth = 200;				
+				this.clientWidth = this.window.width() - 17;	
+				this.compareArray = {height:[],left:[]}		
+				this.clientWidth = this.clientWidth > this.minWidth ? this.clientWidth : this.minWidth;				
+				this.cloumn = Math.floor(this.clientWidth / this.width);
+				this.ui.main.css({'width': this.clientWidth});
+				this.ui.wrap.css({'width': (this.cloumn * this.width - 10), 'margin': '0 auto'});
+			},
+			regEvent: function(){
+				var _this = this;
+				
+				this.window.resize(function(){
+					_this.resize();
+				});
+				
+				
+				this.window.scroll(function(){
+					_this.scroll();
+				});
+			},
+			resize: function(){
+			
+				this.setWrap();
+				
+				var box = this.ui.wrap.find('.box');
+				var len = box.length;
+				
+				for(var i = 0; i < len; i++){
+					var item = {};
+					var height = box.eq(i).height();
+					
+					if(i < this.cloumn){
+						this.compareArray.height[i] = height + 20;
+						this.compareArray.left[i] = i * this.width;
+						
+						item.top = 0;												
+						item.left = this.compareArray.left[i];					
+					}else{
+						var minHeight = Math.min.apply('', this.compareArray.height);
+						var minHkey = this.getMinHeightKey(this.compareArray.height, minHeight);
+						
+						item.top = minHeight + 10;						
+						item.left = this.compareArray.left[minHkey];						
+						
+						this.compareArray.height[minHkey] += height + 30;
+					}
+					box.eq(i).animate(item, 400);
+					//setTimeout(function(){ box.eq(i).animate(item, 400); }, 20);
+				}
+				
+			},
+			loadPage: function(len){		
+				for(var i = 0; i < len; i++){
+					var height = Math.floor(Math.random() * 700 + 99);
+					var item = {'width': this.imgWidth, 'height': height};				
+					if(i < this.cloumn){
+						this.compareArray.height[i] = height + 20;
+						this.compareArray.left[i] = i * this.width;
+						
+						item.top = 0;												
+						item.left = this.compareArray.left[i];					
+					}
+					
+					this.append(item);			
+				}
+				
+			},
+			scroll: function(){
+				
+				var box = this.ui.wrap.find('.box').eq(-1);				
+				var lastPinHeight = box.offset().top + Math.floor(box.height() / 2);
+				var documentH = $(document).scrollTop() + this.window.height();				
+				
+				if(documentH > lastPinHeight){
+					for(var i = 0; i < this.pageSize; i++){
+						var height = Math.floor(Math.random() * 700 + 99);
+						var item = {'width': this.imgWidth, 'height': height};						
+						this.append(item);
+					}
+				}
+			},
+			append: function(item){		
+
+				if(typeof(item.top) == 'undefined' && typeof(item.left) == 'undefined'){
+					var minHeight = Math.min.apply('', this.compareArray.height);
+					var minHkey = this.getMinHeightKey(this.compareArray.height, minHeight);
+					
+					item.top = minHeight + 10;						
+					item.left = this.compareArray.left[minHkey];						
+					
+					this.compareArray.height[minHkey] += item.height + 30;
+				}
+				
+				var box = $('<div class="box"><img src="http://lorempixel.com/'+ item.width +'/' + item.height + '/"></div>');
+				
+				box.css({'top': item.top, 'left': item.left, 'position': 'absolute'});					
+				
+				this.ui.wrap.append(box);
+				
+				//box.fadeIn("slow");
+			},
+			getMinHeightKey: function(arr,minH){
+				for(key in arr){
+					if(arr[key] == minH){
+						return key;
+					}
+				}
+			}
+		};
+		
+		$(function(){
+			Falls.init();
+		});
+	</script>
+</body>
+</html>

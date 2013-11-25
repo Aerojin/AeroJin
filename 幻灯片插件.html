@@ -1,0 +1,350 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">	
+	<title>幻灯片插件</title>
+	<style type="text/css">
+		*{margin:0;padding:0;border:0;}
+		body{font-size:12px;}
+		.hidden{display:none;}
+		.clear{clear:both;}
+		.wrap{width: 980px; margin: 0px auto;}
+		.head{width:100%;height:50px;}
+		.content{width: 100%;}
+
+		.container{width:520px; height:280px;border:solid 1px #ccc;overflow: hidden; position: relative;cursor: pointer;}
+		.promo{width:100%;position:absolute;bottom:10px;left:0;}
+		.promo-nav{width:100%;text-align:center; background-color: rgba(0,0,0,0.2);height:10px;padding: 2px 0px;border-radius: 6px;width: 100px;margin: 0 auto;}
+		.promo-nav li{display:inline-block;width:10px;height:10px;background:#b7b7b7;border-radius:50%;z-index:1;text-indent:-9999em;cursor: pointer;}
+		.tabbox{height:280px;width:2600px;
+			/*-webkit-animation-name: tabbox;
+			-webkit-animation-duration: 3s;
+			-webkit-animation-function: linear;*/
+			-webkit-transition: margin-left 0.5s linear;			
+		}
+		.tabbox div{float: left;}
+		.prev,.next{display:block;width:40px;height:40px;position:absolute;top:50%;margin-top:-25px; padding:5px;background-color: rgba(0,0,0,0.2);cursor: pointer;}
+		.prev:link ,.next:link {background-color: rgba(0,0,0,0.2);}
+		.prev:hover  ,.next:hover  {background-color: rgba(0,0,0,0.5);}
+		.prev:visited  ,.next:visited  {background-color: rgba(0,0,0,0.2);}
+		.prev i,.next i{display:block;background-image:url('img/ico.png');background-repeat:no-repeat;width:100%; height:24px;margin: 8px 0 0 5px}
+		.prev{left:10px; }
+		.prev i{background-position: -190px 0px;}		
+		/*.fadePrev i{background-position: 58px 491px;}*/
+		
+		.next{right:10px;}
+		.next i{background-position: -190px -23px;}
+		/*.fadeNext i{background-position: 508px 468px;}*/
+		
+		.promo-nav .selected{background-color:#f40;}
+		.hot{background-color: rgba(0,0,0,0.6);}
+		/*
+		@-webkit-keyframes tabbox{
+			0%{
+				margin-left: 0px;
+			}
+			100%{
+				margin-left: -520px;
+			}
+		}		
+		*/
+	</style>
+	<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>	
+</head>
+<body>	
+	<div class="wrap">
+		<div class="head"></div>
+		<div class="content">
+			<div class="container" id="container">
+				<div class="tabbox elements">
+					<div class="mod"><img src="img/c1.jpg" alt="1" /></div>
+					<div class="mod"><img src="img/c2.jpg" alt="2" /></div>
+					<div class="mod"><img src="img/c3.jpg" alt="3" /></div>
+					<div class="mod"><img src="img/c4.jpg" alt="4" /></div>
+					<div class="mod"><img src="img/c5.jpg" alt="5" /></div>
+				</div>
+				<div class="clear"></div>
+				<div class="promo">
+					<ul class="promo-nav btnItem">
+						<li class="selected"><a href="javascript:void(0);">1</a></li>
+						<li class=""><a href="javascript:void(0);">2</a></li>
+						<li class=""><a href="javascript:void(0);">3</a></li>
+						<li class=""><a href="javascript:void(0);">4</a></li>
+						<li class=""><a href="javascript:void(0);">5</a></li>
+					</ul>
+				</div>
+				<a class="prev btnPage btnPrev" href="javascript:void(0);" style="display:none;">
+					<i></i>
+				</a>
+				<a class="next btnPage btnNext" href="javascript:void(0);" style="display:none;">
+					<i></i>
+				</a>
+			</div>
+			<div style="height:30px; width:100%;"></div>
+			
+			<div class="container" id="fadeContainer">
+				<div class="elements">
+					<div class="mod"><img src="img/c1.jpg" alt="1" /></div>
+					<div class="mod hidden"><img src="img/c2.jpg" alt="2" /></div>
+					<div class="mod hidden"><img src="img/c3.jpg" alt="3" /></div>
+					<div class="mod hidden"><img src="img/c4.jpg" alt="4" /></div>
+					<div class="mod hidden"><img src="img/c5.jpg" alt="5" /></div>
+				</div>
+				<div class="clear"></div>
+				<div class="promo">
+					<ul class="promo-nav btnItem">
+						<li class="selected"><a href="javascript:void(0);">1</a></li>
+						<li class=""><a href="javascript:void(0);">2</a></li>
+						<li class=""><a href="javascript:void(0);">3</a></li>
+						<li class=""><a href="javascript:void(0);">4</a></li>
+						<li class=""><a href="javascript:void(0);">5</a></li>
+					</ul>
+				</div>
+				<a class="prev fadePrev btnPage btnPrev" href="javascript:void(0);" style="display:none;">
+					<i></i>
+				</a>
+				<a class="next fadeNext btnPage btnNext" href="javascript:void(0);" style="display:none;">
+					<i></i>
+				</a>
+			</div>
+			
+			
+		</div>
+	</div>	
+<script type="text/javascript">
+
+	
+	var SS = {		
+		init: function(){
+			
+			var _this = this;	
+			this.ui = {};
+			this.ui.container = $('#container');
+			this.ui.elements = $('#container .elements');
+			this.ui.btnItem = $('#container .btnItem li');
+			this.ui.btnPrev = $('#container .btnPrev');
+			this.ui.btnNext = $('#container .btnNext');
+			this.ui.btnPage = $('#container .btnPage');
+			
+			this.ui.fadeContainer = $('#fadeContainer');
+			this.ui.fadeElements = $('#fadeContainer .elements');
+			this.ui.fadeBtnItem = $('#fadeContainer .btnItem li');
+			this.ui.fadeBtnPrev = $('#fadeContainer .btnPrev');
+			this.ui.fadeBtnNext = $('#fadeContainer .btnNext');
+			this.ui.fadeBtnPage = $('#fadeContainer .btnPage');
+			
+			var cutOptions = {
+				elements: this.ui.elements.find('.mod'),
+				parentElements: this.ui.elements,
+				animation: 'cut'				
+			};
+			
+			this.cut = new slideShow(cutOptions);
+			this.cut.onChange = function(index){
+				_this.ui.btnItem.removeClass('selected');
+				_this.ui.btnItem.eq(index).addClass('selected');
+			};			
+			this.cut.init();
+			
+			var fadeOptions = {				
+				elements: this.ui.fadeElements.find('.mod'),
+				parentElements: this.ui.fadeElements			
+			};	
+			this.fade = new slideShow(fadeOptions);
+			this.fade.onChange = function( index ){
+				_this.ui.fadeBtnItem.removeClass('selected');
+				_this.ui.fadeBtnItem.eq(index).addClass('selected');
+			};
+			this.fade.init();
+			
+			this.regEvent();
+		},
+		regEvent: function(){
+			var _this = this;
+			
+			_this.ui.btnPrev.click(function(){
+				_this.cut.prev();				
+			});
+			
+			_this.ui.btnNext.click(function(){
+				_this.cut.next();				
+			});	
+
+			_this.ui.btnItem.click(function(){
+				var index = _this.ui.btnItem.index($(this));
+				_this.cut.gotoPage(index);				
+			});
+			
+			this.ui.elements.mouseenter(function(){
+				_this.ui.btnPage.show();				
+				_this.pageTime && clearTimeout(_this.pageTime);				
+			});
+			
+			_this.ui.elements.mouseleave(function(){				
+				_this.pageTime = setTimeout(function(){
+					_this.ui.btnPage.hide();
+				}, 200);				
+			});
+			
+			_this.ui.btnPage.mouseenter(function(){
+				_this.pageTime && clearTimeout(_this.pageTime);
+				_this.ui.btnPage.show();
+			});
+			
+			_this.ui.btnPage.mouseleave(function(){
+				_this.pageTime = setTimeout(function(){
+					_this.ui.btnPage.hide();
+				}, 200);
+			});
+			
+			//------
+			
+			_this.ui.fadeBtnPrev.click(function(){
+				_this.fade.prev();				
+			});
+			
+			_this.ui.fadeBtnNext.click(function(){
+				_this.fade.next();				
+			});	
+
+			_this.ui.fadeBtnItem.click(function(){
+				var index = _this.ui.fadeBtnItem.index($(this));
+				_this.fade.gotoPage(index);				
+			});
+			
+			this.ui.fadeElements.mouseenter(function(){
+				_this.ui.fadeBtnPage.show();				
+				_this.fadePageTime && clearTimeout(_this.fadePageTime);				
+			});
+			
+			_this.ui.fadeElements.mouseleave(function(){				
+				_this.fadePageTime = setTimeout(function(){
+					_this.ui.fadeBtnPage.hide();
+				}, 200);				
+			});
+			
+			_this.ui.fadeBtnPage.mouseenter(function(){
+				_this.fadePageTime && clearTimeout(_this.fadePageTime);
+				_this.ui.fadeBtnPage.show();
+			});
+			
+			_this.ui.fadeBtnPage.mouseleave(function(){
+				_this.fadePageTime = setTimeout(function(){
+					_this.ui.fadeBtnPage.hide();
+				}, 200);
+			});
+		}
+		
+	};
+	
+	/**
+		SlideShow
+		{
+			parentElements: 父容器
+			elements: 要变化的项
+			time: 10000
+			index: 0,默认显示项
+			excessive: "Fade"
+			isParentStop: 鼠标悬停父元素是否停止动画
+		}
+		
+		event 
+		onChange(index);
+		
+		function
+		change(index);
+	*/
+	
+	var slideShow = function( options ){
+		this.currentIndex = options.index || 0;
+		this.elements = options.elements;
+		this.parentElements = options.parentElements;
+		this.length = this.elements.length;
+		this.time = options.time || 2000;
+		this.animation = options.animation || 'fade';
+		this.isStart = options.isStart ? options.isStart : 1;		
+	};
+	
+	slideShow.prototype = {
+		init: function(){
+			
+			this.regEvent();	
+			this.interid = 0;
+			
+			if(this[this.animation]){
+				this.change = this[this.animation];
+			}else{
+				this.change = this.fade;
+			}
+			
+			if(this.isStart){
+				this.start();
+			}	
+		},
+		regEvent: function(){
+			var _this = this;
+			
+			this.parentElements && this.parentElements.mouseover(function(){
+				_this.stop();
+			}).mouseout(function(){
+				_this.start();
+			});
+		},
+		start: function(){
+			var _this = this;
+			
+			this.stop();			
+			this.interid = setInterval(function(){
+				_this.next();
+			}, this.time);
+			
+		},
+		stop: function(){
+			clearInterval(this.interid);
+		},
+		prev: function(){
+			var index = this.currentIndex - 1;			
+			this.gotoPage( index );
+		},
+		next: function(){
+			var index = this.currentIndex + 1;						
+			this.gotoPage( index );
+		},
+		gotoPage: function(index){
+			index = index < 0 ? this.length - 1 : index;
+			index = index >= this.length ? 0 : index;
+			this.stop();
+			this.change(index);
+			this.start();
+		},
+		change: function( index ){	
+			
+		},
+		cut: function( index ){			
+			var range = this.elements.eq(this.currentIndex).width();
+			var moveRange = index * range * -1;
+			
+			this.parentElements.css({
+				'margin-left': moveRange
+			});
+			
+			this.currentIndex = index;
+			this.onChange( this.currentIndex );		
+		},
+		fade: function( index ){
+		
+			this.elements.eq(this.currentIndex).stop(true, true).fadeOut().clearQueue();
+			this.elements.eq(index).stop(true, true).fadeIn().clearQueue();			
+			this.currentIndex = index;
+			this.onChange( this.currentIndex );
+		},
+		onChange: function( index ){
+			
+		}
+	};
+	
+	
+	$(function(){ SS.init(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>音乐播放器</title>
+	<style type="text/css">
+		*{margin:0px; padding: 0px;}
+		.wrapper{width:980px; margin: 50px auto;}
+		.wrap{width: 100%;}
+		.music{margin-top: 50px;}
+		.noStart{ width: 300px; height:3px; background:#9FB6C9; position: relative; }
+		.inProgress{ width: 50px; height: 3px; background: #ccc;  position:absolute; }
+		.focus{width: 12px; height: 12px; background:#ccc; border-radius: 50%; position:absolute; top: -5px; left: 50px;}
+		.time{margin: 10px 0; width:300px;}
+		
+		.control{background-image:url('img/baidu.png');background-repeat:no-repeat;width:32px;height:42px; margin: 0px auto; cursor: pointer; display: inline-block;}
+		
+		.start{background-position: -173px -317px;}
+		
+		.play{background-position: -119px -263px; float:right;}		
+		.play:link{background-position: -119px -263px;}
+		.play:hover{background-position: -132px -216px;}
+		.play:visited{background-position: -119px -263px;}
+		
+		.stop{ background-position: -132px -168px; float:right; }
+		.stop:link{background-position: -132px -168px;}
+		.stop:hover{background-position: -120px -312px;}
+		.stop:visited{background-position: -132px -168px;}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<h1>音乐播放器</h1>
+		<div class="wrap">
+			
+			<div class="music">
+				<div class="time"><span style="float:right" id="endTime">03:36</span><span id="startTime">01:22</span></div>
+				<div class="noStart">					
+						<div class="inProgress" id="inProgress"></div>
+						<div class="focus" id="focus"></div>										
+				</div>
+				<div style="margin: 10px 0px; width: 300px;"> 					
+					<span class="control play" id="btnPlay"></span>					
+					<span class="control stop" id="btnStop" style="display: none;"></span>
+					<span class="control start" id="btnStart" ></span>
+				</div>
+					
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var MC = {
+			init: function(){
+				var _this = this;
+				
+				this.ui = {};
+				this.ui.stop = this.byID('stop');
+				this.ui.focus = this.byID('focus');				
+				this.ui.btnPlay = this.byID('btnPlay');				
+				this.ui.endTime = this.byID('endTime');
+				this.ui.btnStop = this.byID('btnStop');
+				this.ui.btnStart = this.byID('btnStart');
+				this.ui.startTime = this.byID('startTime');				
+				this.ui.inProgress = this.byID('inProgress');
+				
+							
+				this.music = new music({'endTime': 30});
+				this.music.onChange = function(progress, data){
+					_this.change(progress, data);
+				};
+				this.music.onReset = function(progress, data){
+					_this.reset(progress, data);
+				};
+				
+				this.regEvent();
+				
+				this.max = 300;
+				this.range = this.max / this.music.endTime;
+			},
+			regEvent: function(){
+				var _this = this;
+				
+				this.ui.btnPlay.onclick = function(){
+					_this.music.play();
+					_this.setStyle(this,{'display': 'none'});
+					_this.setStyle(_this.ui.btnStop,{'display': 'block'});
+				};
+				
+				this.ui.btnStart.onclick = function(){
+					_this.music.reset();
+					_this.setStyle(_this.ui.btnPlay,{'display': 'none'});
+					_this.setStyle(_this.ui.btnStop,{'display': 'block'});
+				}
+				
+				this.ui.btnStop.onclick = function(){
+					_this.music.stop();
+					_this.setStyle(this,{'display': 'none'});
+					_this.setStyle(_this.ui.btnPlay,{'display': 'block'});
+				}		
+				
+			},
+			reset: function( progress, data ){
+				var width = data[0] * this.range;
+				this.setStyle(this.ui.inProgress, {'width': width + 'px'});
+				this.setStyle(this.ui.focus, {'left': width + 'px'});
+				this.ui.startTime.innerHTML = this.getTime(data[0]);
+				this.ui.endTime.innerHTML = this.getTime(data[1]);
+			},
+			change: function( progress, data){
+				var width = data[0] * this.range;
+				this.setStyle(this.ui.inProgress, {'width': width + 'px'});
+				this.setStyle(this.ui.focus, {'left': width + 'px'});
+				this.ui.startTime.innerHTML = this.getTime(data[0]);
+				this.ui.endTime.innerHTML = this.getTime(data[1]);
+			},
+			byID: function( id ){
+				return document.getElementById(id);
+			},
+			setStyle: function( dom, options ){
+				for(var s in options){
+					dom.style[s] = options[s];
+				}
+			},
+			getTime: function( num ){
+				var minute = Math.floor(num / 60);
+				var second = num % 60;
+
+				if(minute < 10){
+					minute = '0' + minute;
+				}
+				
+				if(second < 10){
+					second = '0' + second;
+				}
+				
+				return minute + ":" + second;
+			}
+		}
+		
+		var music = function( options ){
+			this.endTime = options.endTime;
+			this.startTime = options.startTime || 0;
+			this.progress = this.startTime / this.endTime;
+			this.time = options.time || 1000;
+			this.interval = 0;
+		}
+		
+		music.prototype = {
+			init: function(){
+								
+			},
+			reset: function(){
+				this.startTime = 0;
+				this.progress = 0;				
+				this.onReset(this.progress, [this.startTime, this.endTime]);
+				this.stop();
+				this.animation();
+			},
+			stop: function(){
+				clearInterval(this.interval);	
+			},
+			play: function(){
+				this.animation();
+			},
+			animation: function(){
+				var _this = this;			
+				this.interval = setInterval(function(){
+					_this.startTime++;
+					_this.progress = (_this.startTime / _this.endTime) * 100;
+					_this.onChange(_this.progress , [_this.startTime, _this.endTime]);
+					
+					if(_this.progress == 100){
+						clearInterval(_this.interval);
+					}
+					
+				}, this.time);
+			},
+			onChange: function( progress ){
+			
+			},
+			onReset: function(){
+			
+			}
+			
+		};
+		
+		document.body.onload = function(){
+			MC.init();
+		};
+	</script>
+</body>
+</html>
