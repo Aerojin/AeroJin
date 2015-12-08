@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>滴滴巴士</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+	<meta name="format-detection" content="telephone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->	
+	<link href="img/favicon_9dddcb7.png" rel="shortcut icon">
+	<link href="img/114-114_7f876d0.png" rel="apple-touch-icon">
+	<script type="text/javascript">
+		;(function (win, doc) {
+			var max = 414;
+
+			var setFontSize = function () {
+				var myHTML = doc.querySelector("html");
+				var myWidth = doc.documentElement.clientWidth > max ? max : doc.documentElement.clientWidth;
+
+				myHTML.style.fontSize = 100 * myWidth / max  + 'px';
+			};
+
+			win.onresize = function () {
+				setFontSize();
+			};
+
+			setFontSize();
+		})(window, document);
+	</script>
+	<link href="img/index.css" rel="stylesheet" type="text/css">
+</head>
+<body class="vex-open">
+	<div class="main">
+		<span id="date1">12.9</span>
+	</div>
+	<div class="vex">
+        <div class="vex-overlay"></div>
+        <div class="vex-content" style="background: none;">
+            <div class="busline-ticket">
+                <div class="mytickets-item">
+                    <div class="mytickets-line js-title" id="js-title"
+                    data-mylineid="589" data-myrideid="1644781905422">
+                        <div class="mytickets-border-top"></div>
+                        <div class="mytickets-line-detail">
+                            <time id="date2">12月8日</time>
+                            <h2>万家灯火<i>Y</i>中兴通讯<span></span></h2>
+                        </div>
+                    </div>
+                    <div class="mytickets-busdetail" data-mylineid="589"
+                    data-myrideid="1644781905422">
+                        <div class="mytickets-busnumber">
+                            <section class="busnumber">
+                                <span>粤</span>B<sup>●</sup>X1217
+                            </section>
+                        </div>
+                        <div class="mytickets-cutoff"></div>
+                        <div class="mytickets-bustops">
+                            <ul class="mytickets-bustime">
+                                <li>
+                                    <div>
+                                        <time>07:55</time>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <time>08:45</time>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="mytickets-busstations">
+                                <li>万家灯火</li>
+                                <li>中兴通讯</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mytickets-footer">
+                        <div class="mytickets-btn" id="btn-submit1">
+                            验票
+                        </div>
+						<div class="mytickets-btn disabled hide" id="btn-submit2">
+                            已验票
+                        </div>
+                    </div>
+                    <div class="mytickets-border-bottom"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<script type="text/javascript">
+		var app = {
+			init: function () {
+				
+				this.ui = {};
+				this.ui.date1 		= this.querySelector("#date1");
+				this.ui.date2 		= this.querySelector("#date2");
+				this.ui.title 		= this.querySelector("#js-title");
+				this.ui.btnSubmit1 	= this.querySelector("#btn-submit1");
+				this.ui.btnSubmit2 	= this.querySelector("#btn-submit2");
+				
+				this.setDate();
+				this.regEvent();
+			},
+			regEvent: function () {
+				var _this = this;
+				
+				this.ui.btnSubmit1.addEventListener("touchstart", function () {
+					_this.addClass(_this.ui.btnSubmit1, "hide");
+					_this.removeClass(_this.ui.btnSubmit2, "hide");
+					_this.addClass(_this.ui.title, "strategy-rainbow");
+				});		
+			},
+			
+			setDate: function () {
+				var date 	= new Date();
+				var month 	= date.getMonth() + 1;
+				var day 	= date.getDate();
+				
+				this.ui.date1.innerText = month + "." + day;
+				this.ui.date2.innerText = month + "月" + day + "日";
+			},
+			
+			querySelector: function (selector) {
+				return document.querySelector(selector);
+			},
+			
+			hasClass: function (obj, cls) {
+				return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)')); 
+			},
+			
+			addClass: function (obj, cls) {
+				if (!this.hasClass(obj, cls)) obj.className += " " + cls;  
+			},
+			
+			removeClass: function (obj, cls) {
+				if (this.hasClass(obj, cls)) {  
+					var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');  
+					obj.className = obj.className.replace(reg, ' ');  
+				}
+			}
+		};
+		
+		app.init();
+	</script>
+</body>
+</html>

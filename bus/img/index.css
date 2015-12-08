@@ -1,0 +1,250 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+	-webkit-text-size-adjust: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+	font-family: arial,sans-serif;
+}
+body.vex-open {
+	overflow: hidden;
+}
+body {
+	font-family: Arial,Helvetica,sans-serif;
+	box-sizing: border-box;
+	background: #f0f0f0;
+}
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, figure, footer, header, menu, nav, section, time, mark, audio, video, details, summary {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font-weight: 400;
+	vertical-align: baseline;
+	background: transparent;
+}
+@font-face {
+	font-family:home_icon;
+	src:url(home_icon_c712608.woff) format('woff'), url(home_icon_637eb42.ttf) format('truetype'), url(home_icon_9e5b644.svg#home_icon) format('svg');
+	font-weight:400;
+	font-style:normal
+}
+.main{width: 100%; height: 100%; background: url(bg.jpg) no-repeat; background-size:100% 100%; position: absolute;}
+.main1{width: 100%; height: 100%; background: url(bg1.jpg) no-repeat; background-size:100% 100%; position: absolute;}
+#date1{position: absolute;left: 0.95rem;top: 1.42rem;color: #666; font-size: 0.16rem;}
+		
+.vex, .vex *, .vex :before, .vex :after {-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+.vex{position: absolute; overflow: visible; -webkit-overflow-scrolling: touch; z-index: 10001; top: 0; right: 0; bottom: 0; left: 0;}
+.vex-overlay {background: #000; filter: alpha(opacity=40); -ms-filter: "alpha(Opacity=40)";}
+.vex-overlay {position: fixed; background: rgba(0,0,0,.6); top: 0; right: 0; bottom: 0; left: 0;}
+
+.vex-content {-webkit-backface-visibility: hidden; background: #fff;}
+.busline-ticket {position: fixed; top: 50%; left: 50%; width: 3.92rem; transform: translate(-50%,-50%); -webkit-transform: translate(-50%,-50%);}
+.busline-ticket .mytickets-item {background: #fff; margin: 0rem 0rem .42666667rem; min-height: 3.68rem;}
+.busline-ticket .mytickets-item .mytickets-line {position: relative; min-height: 0.886rem; background: #ff8903; text-align: center; color: #fff;}		
+.busline-ticket .mytickets-item .mytickets-line .mytickets-border-top {position: absolute; z-index: 1; width: 100%; height: 0.05rem;background: url(dgb_sawtoothline_grayblack_e95827a.png) no-repeat; background-size: contain;}
+
+.busline-ticket .mytickets-item .mytickets-line .mytickets-line-detail {
+	padding-top: 0.1656rem;
+	/* line-height: 0; */
+	overflow: hidden;
+	font-size: 0;
+	padding-bottom: 0.1656rem;
+}
+.busline-ticket .mytickets-item .mytickets-line .mytickets-line-detail time {
+	font-size: 0.14rem;
+}
+.busline-ticket .mytickets-item .mytickets-line .mytickets-line-detail h2 {
+	padding-top: 0.055rem;
+	font-size: 0.18rem;
+}
+.busline-ticket .mytickets-item .mytickets-line .mytickets-line-detail h2 i {
+	font-family: home_icon;
+	padding: 0rem .055rem;
+}
+.busline-ticket .mytickets-item .mytickets-line .mytickets-line-detail h2 span {
+	padding: 0rem 0rem 0rem 0.0772rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail {
+	padding: 0rem 0.11rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-busnumber {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-flex-flow: row nowrap;
+	flex-flow: row nowrap;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-busnumber section.busnumber {
+	-webkit-box-flex: 2;
+	-webkit-flex: 2;
+	flex: 2;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-busnumber section {
+	padding: .1656rem 0rem;
+	font-size: 0.38rem;
+	text-align: center;
+	color: #666;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-busnumber section.busnumber span {
+	font-size: 0.32rem;
+	position: relative;
+	top: -0.03rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-busnumber section.busnumber sup {
+	top: -0.10rem;
+	font-size: 0.12rem;
+}
+.busline-ticket .mytickets-item .mytickets-cutoff {
+	height: 1px;
+	font-size: 12px;
+	text-align: center;
+	color: #ccc;
+	background: url(cutoff_straight_a082503.png) repeat-x top center;
+	background-size: 100% 50%;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops {
+	min-height: 0.9384rem;
+	position: relative;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-bustime {
+	padding-left: 0.7728rem;
+	margin-right: 0.4416rem;
+	position: absolute;
+	height: 100%;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul {
+	position: relative;
+	display: inline-block;
+	min-height: 0.9384rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-bustime li:first-child {
+	top: 0.10rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-bustime li:last-child {
+	top: 50%;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-bustime li {
+	position: absolute;
+	color: #666;
+	font-size: 14px;
+	line-height: .2428rem;
+	height: 50%;
+	list-style: none;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-bustime li div {
+	display: table;
+	height: 100%;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-bustime li div time {
+	display: table-cell;
+	vertical-align: middle;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-busstations {
+	width: 1.8767rem;
+	left:1.656rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul {
+	position: relative;
+	display: inline-block;
+	min-height: 0.9384rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-busstations::before {
+	content: "";
+	background: url(dgb_add_20efbc2.png) no-repeat center center;
+	background-size: 20%;
+	width: 0.4416rem;
+	height: 100%;
+	display: block;
+	position: absolute;
+	left: -0.4416rem;
+	top: 0rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-busstations li:first-child {
+	padding: .1104rem 0rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-busstations li:last-child {
+	padding: .1104rem 0rem;
+}
+.busline-ticket .mytickets-item .mytickets-busdetail .mytickets-bustops ul.mytickets-busstations li {
+	color: #666;
+	font-size: 14px;
+	line-height: .2428rem;
+	min-height: .2428rem;
+	list-style: none;
+}
+.busline-ticket .mytickets-item .mytickets-footer {
+	position: relative;
+	padding: .1104rem;
+}
+.busline-ticket .mytickets-item .mytickets-footer .mytickets-btn {
+	margin: 0 5%;
+	margin-bottom: 0.1104rem;
+	width: 90%;
+	height: 0.4526rem;
+	line-height: 0.4526rem;
+	box-sizing: border-box;
+	background-color: #ff8903;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 16px;
+	text-align: center;
+}
+.busline-ticket .mytickets-item .mytickets-footer .disabled{background-color:#e0e0e0;}
+.busline-ticket .mytickets-item .mytickets-border-bottom {
+	position: absolute;
+	left: 0;
+	bottom: 0.43rem;
+	z-index: 1;
+	width: 100%;
+	height: 0.0552rem;
+	background: url(dgb_sawtoothline_grayblack_e95827a.png) no-repeat;
+	background-size: contain;
+	background-color: #fff;
+	-webkit-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+.hide{display: none;}
+@keyframes strategy-rainbow {
+    25% {
+        background:#0ac5f4
+    }
+    50% {
+        background:#ca5bfe
+    }
+    75% {
+        background:#10d36c
+    }
+    100% {
+        background:#10d36c
+    }
+}
+@-webkit-keyframes strategy-rainbow {
+    25% {
+        background:#0ac5f4
+    }
+    50% {
+        background:#ca5bfe
+    }
+    75% {
+        background:#10d36c
+    }
+    100% {
+        background:#10d36c
+    }
+}
+.busline-ticket .strategy-rainbow {
+    -webkit-animation:strategy-rainbow .8s ease-in-out 1s infinite;
+    animation:strategy-rainbow .8s ease-in-out 1s infinite
+}
