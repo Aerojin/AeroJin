@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>刮刮乐</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+	<meta name="format-detection" content="telephone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<script type="text/javascript">
+		(function(c,b){var a=414;var d=function(){var f=b.querySelector("html");var e=b.documentElement.clientWidth>a?a:b.documentElement.clientWidth;f.style.fontSize=100*e/a+"px"};c.onresize=function(){d()};d()})(window,document);
+	</script>
+	<style type="text/css">
+		body,html{margin: 0; padding: 0; font-size: 0.14rem;}
+		.main{width: 100%;}
+		.red{color: red;}
+		.canvas{position: absolute; left:0; top: 0;}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<p>
+			<input type="button" id="btn-reset" value="重置" />
+			已刮开 <span class="red">10%</span>
+		</p>
+		<div id="container"></div>
+	</div>
+	
+	<script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>	
+	<script type="text/javascript">
+		var lottery = function (options) {
+			var me = this;	
+			
+			me.context 		= null; 		//内容canvas
+			me.contextCtx 	= null; 		//内容canvas 2d上下文
+			me.mask 		= null; 		//涂层canvas
+			me.maskCtx 		= null;			//涂层canvas 2d上下文
+			me.content 		= null; 		//刮开后显示内容, 图片或者文字
+			me.contentType 	= null;			//内容的类型, text: 文字, image: 图片
+			me.clientRect 	= null; 		//用于记录mask元素的 getBoundingClientRect() 值
+			
+			
+			me.init = function () {				
+				me.opts = $.extend(true, {
+					width: 200, 					//刮奖区域宽度
+					height: 100, 					//刮奖区域高度
+					cover: "#ccc", 					//刮奖涂层, 默认是颜色, 如果是图片这个值就是图片路径
+					coverType: "color", 			//涂层类型, color: 颜色(默认灰色),  image: 图片,  默认颜色
+					container: $("body"), 			//容器
+					callback: function () {} 		//回调函数, 每次刮奖都会调用, 返回刮开区域百分比	
+				}, options);
+				
+				me.context 		= me.context || this.createcanvas({class: "canvas"});
+				me.mask 		= me.mask || this.createcanvas({class: "canvas"});
+				me.clientRect 	= me.container.get(0).getBoundingClientRect();
+				
+				me.container.empty();
+				me.container.append(me.context);
+				me.container.append(me.mask);
+				
+				
+				me.regEvent();				
+			};
+			
+			//注册事件
+			me.regEvent = function () {
+				
+			};
+			
+			//创建画布
+			me.createcanvas = function (attributes) {
+				var canvas = $(document.createElement("canvas"));
+			
+				canvas.attr(attributes);
+				
+				return canvas;
+			};
+			
+			//重新开始
+			me.reStart = function () {
+			
+			};			
+		};
+	</script>
+</body>
+</html>
