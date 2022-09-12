@@ -20,12 +20,18 @@
 	<div class="wrapper">
 		<h1>排序动画</h1>
 		<div class="body">
+			<p>启动/暂停: <input type="button" id="btnStart" value="启动" /> <input type="button" id="btnStop" value="暂停" /></p>
 			<p>排序速度: <input value="170" max="195" min="1" id="speed" type="range"></p>
-			<p>数组长度: <input type="text" id="txtLen" value="50" /> <input type="button" value="生成数组" id="btnRelease" /></p>
+			<p>数组长度: <input type="text" id="txtLen" value="50" /> <input type="button" value="生成数组" id="btnRelease" /></p>			
 			<p>待排数组: <input type="text" id="txtArray" style="width: 1000px" /></p>
 			<p>
-				<input type="button" value="冒泡排序" id="btnBubbleSort" />
-				<input type="button" value="快速排序" id="btnQuickSort" />
+				<input type="button" class="btn-sort" value="冒泡排序" data-type="bubbleAnimation" />
+				<input type="button" class="btn-sort" value="快速排序" data-type="quickAnimation" />
+				<input type="button" class="btn-sort" value="插入排序" data-type="insertionAnimation" />				
+				<input type="button" class="btn-sort" value="希尔排序" data-type="sellAnimation" />
+				<input type="button" class="btn-sort" value="选择排序" data-type="selectionAnimation" />
+				<input type="button" class="btn-sort" value="鸡尾酒排序" data-type="cocktailAnimation" />
+				<input type="button" class="btn-sort" value="奇偶排序" data-type="batcherAnimation" />
 			</p>
 		</div>
 		<div class="wrap" id="wrap">
@@ -42,27 +48,14 @@
 			this.ui.speed = this.byID('speed');
 			this.ui.txtLen = this.byID('txtLen');
 			this.ui.txtArray = this.byID('txtArray');			
-			this.ui.btnRelease = this.byID('btnRelease');	
-			this.ui.btnQuickSort = this.byID('btnQuickSort');
-			this.ui.btnBubbleSort = this.byID('btnBubbleSort');
-			
+			this.ui.btnStop = this.byID('btnStop');
+			this.ui.btnStart = this.byID('btnStart');
+			this.ui.btnSort = this.byClass('btn-sort');			
+			this.ui.btnRelease = this.byID('btnRelease');			
 			
 			this.random();
-			this.animation = null;
-			
-			this.actionList = {
-				'bubble': {
-					'animateSort': 'bubbleAnimation'
-				},
-				quick: {
-					'animateSort': 'quickAnimation'
-				}
-			};
-			
-			
-			
-			this.regEvent();			
-			
+			this.regEvent();
+			this.animation = null;			
 		},
 		regEvent: function(){
 			var _this = this;
@@ -71,16 +64,22 @@
 				_this.random();				
 			};
 			
-			_this.ui.btnBubbleSort.onclick = function(){
-				_this.sort(_this.actionList.bubble);
-			};
-			
 			_this.ui.speed.onchange = function(){
 				_this.animation.setSpeed(200 - this.value);
+			};
+			
+			for(var i = 0; i < this.ui.btnSort.length; i++){
+				this.ui.btnSort[i].onclick = function () {
+					_this.sort(this.dataset.type);
+				};
 			}
 			
-			_this.ui.btnQuickSort.onclick = function(){
-				_this.sort(_this.actionList.quick);
+			_this.ui.btnStart.onclick = function () {
+				_this.animation.run(_this.getSpeed());
+			};
+			
+			_this.ui.btnStop.onclick = function () {
+				_this.animation.stop();
 			};
 		},
 		random: function(){
@@ -103,6 +102,9 @@
 		byID: function( id ){
 			return document.getElementById(id);
 		},
+		byClass: function (className) {
+			return document.getElementsByClassName(className);
+		},
 		setStyle: function( dom, options ){
 			for(var s in options){
 				dom.style[s] = options[s];
@@ -116,13 +118,15 @@
 		getSpeed: function(){
 			return 200 - this.ui.speed.value;
 		},
-		sort: function( obj ){
-			var array = this.getArray();
-			
-			this.animation && this.animation.stop();
-			this.animation = new animation({wrap: this.ui.wrap,	array: array});
-			this[obj.animateSort](array, this.animation);
-			this.animation.run(this.getSpeed());
+		sort: function( type ){
+			if(this[type]){
+				var array = this.getArray();
+				
+				this.animation && this.animation.stop();
+				this.animation = new animation({wrap: this.ui.wrap,	array: array});
+				this[type](array, this.animation);
+				this.animation.run(this.getSpeed());
+			}
 		},
 		bubbleAnimation: function(array, animation){
 			//冒泡排序
@@ -142,9 +146,15 @@
 				}				
 				animation.addBlur(i);
 			}
+			
+			console.log("冒泡排序:", array);
+			return array;
 		},
 		quickAnimation: function(array, animation){			
-			this.quickSort(array, 0, array.length - 1, animation);			
+			this.quickSort(array, 0, array.length - 1, animation);
+
+			console.log("快速排序:", array);
+			return array;		
 		},
 		quickSort: function(array, l, r, animation){
 			//快排
@@ -189,6 +199,232 @@
 				if( r-i >1 )
 					this.quickSort(array, i + 1, r, animation);
 			}			
+		},
+		insertionAnimation: function (array, animation) {
+			//插入排序	
+
+			var i = 1, j, key,
+			len = array.length;
+			
+			for(; i < len; i++){				
+				j = i;
+				key = array[j];				
+				animation.addActionFragment(0, i);
+				
+				while(--j > -1){
+					animation.addAction(j);
+					
+					if(array[j] > key){
+						animation.addChange(j + 1, j);
+						array[j + 1] = array[j];
+						animation.addBlur(j);
+					}else{
+						animation.addBlur(j);
+						break;
+					}
+					
+					animation.addBlur(j);
+				}				
+				
+				array[j + 1] = key;				
+				animation.addBlurFragment(0, i);
+			}
+			
+			console.log("插入排序:", array);
+			return array;		
+		},
+		sellAnimation: function (array, animation) {
+			//var stepArr = [1031612713, 217378076, 45806244, 9651787, 2034035, 428481, 90358, 19001, 4025, 836, 182, 34, 9, 1];
+			
+			var stepArr = [1031612713, 217378076, 45806244, 9651787, 2034035, 428481, 90358, 19001, 4025, 1750, 836, 701, 301, 132, 57, 23, 10, 4, 1]; // reverse() 在维基上看到这个最优的步长 较小数组
+			var i = 0;
+			var stepArrLength = stepArr.length;
+			var len = array.length;
+			var len2 =  parseInt(len/2);
+			
+			for(;i < stepArrLength; i++){
+				if(stepArr[i] > len2){
+					continue;
+				}
+				stepSort(stepArr[i]);
+			}
+
+			// 排序一个步长
+			function stepSort(step){
+				
+				console.log(step);// 使用的步长统计
+				
+				var i = 0, j = 0, f, tem, key;			
+				
+				for(;i < step; i++){// 依次循环列
+					for(j = 1; step * j + i < len; j++){//依次循环每列的每行
+						tem = f = step * j + i;
+						key = array[f];
+						animation.addAction( f );
+						while((tem -= step) >= 0){// 依次向上查找
+							//console.log(tem);
+							animation.addAction( tem );
+							if(array[tem] > key){
+								animation.addChange(tem + step, tem);
+								array[tem + step] = array[tem];
+							}else{
+								animation.addBlur( tem );
+								break;
+							}
+							animation.addBlur( tem );
+						}
+						animation.addBlur( f );
+						array[tem + step ] = key;
+					}
+				}
+				
+			}
+			
+			console.log("希尔排序:", array);
+			return array;
+		},
+		selectionAnimation: function (array, animation) {
+			//选择排序
+			var len = array.length;
+			
+			for (var i = 0; i < len - 1; i++) {
+				var min = i;
+				
+				animation.addAction(min);
+				
+				for (var j = i + 1; j < len; j++){
+					animation.addAction(j);
+					
+					if (array[min] > array[j]){
+						animation.addBlur(min);
+						min = j;
+						animation.addAction(min);						
+					}
+					
+					animation.addBlur(j);
+				}
+				
+				animation.addBlur(min);
+						
+				if (min != i) {
+					var temp = array[min];
+					array[min] = array[i];
+					array[i] = temp;
+					animation.addChange(i, min);
+				}
+			}
+			
+			console.log("选择排序:", array);
+			return array;
+		},
+		cocktailAnimation: function (array, animation){
+			//鸡尾酒排序
+			var len = array.length;
+			var item = array[0];
+			var i = 0;
+			var j = len - 1;
+			var k=0;
+			var index = 0;
+			var ischange = false;
+			
+			while(j - i > 1){
+				//寻找最大
+				ischange = false;
+				item = array[i];
+				index = i;
+				animation.addActionFragment(i, j);
+				for(k = i; k <= j; k++){
+					animation.addAction(k);
+					if(item > array[k]){
+						array[index] = array[k];
+						array[k] = item;
+						ischange = true;
+						animation.addChange(index, k);
+					}else{
+						item = array[k];
+
+					}
+					index = k;
+					animation.addBlur(k);
+				}
+				animation.addBlurFragment(i, j);
+				console.log("start", j);
+				j--;
+				
+				//寻找最小
+				item = array[j];
+				index = j;
+				console.log("end", j);
+				animation.addActionFragment(i, j);
+				for(k=j; k > i-1; k--){
+					animation.addAction(k);
+					if(item < array[k]){
+						array[index] = array[k];
+						array[k] = item;
+						ischange = true;
+						animation.addChange(index, k);
+					}else{
+						item = array[k];
+
+					}
+					index = k;
+					animation.addBlur(k);
+				}
+				animation.addBlurFragment(i, j);
+				i++;
+				//没有任何交换跳出
+				if( ischange == false ){
+					break;
+				}
+			}
+			
+			console.log("鸡尾酒排序:", array);
+			return array;
+		},
+		batcherAnimation: function (array, animation) {
+			//奇偶排序
+			
+			var len = array.length;
+			var sorted = true;
+			
+			while(sorted){
+				sorted = false;
+				
+				for(var i = 1; i < len - 1; i += 2)
+				{
+					animation.addAction(i);
+					animation.addAction(i+1);
+					if(array[i] > array[i + 1])
+					{
+						var t = array[i];
+						array[i] = array[i + 1];
+						array[i + 1] = t;
+						sorted = true;
+						animation.addChange(i, i+1);
+					}
+					animation.addBlur(i);
+					animation.addBlur(i+1);
+				}	
+				
+				for(var i = 0; i < len; i += 2){
+				
+					animation.addAction(i);
+					animation.addAction(i+1);
+					
+					if(array[i] > array[i + 1]){
+						var tmp = array[i];
+						array[i] = array[i + 1];
+						array[i + 1] = tmp;
+						sorted = true;
+						animation.addChange(i, i+1);
+					}
+					animation.addBlur(i);
+					animation.addBlur(i+1);
+				}
+			}
+			
+			console.log("奇偶排序:", array);
+			return array;
 		}
 	}
 	
@@ -200,7 +436,7 @@
 		this.length = this.array.length;
 		this.speed = options.speed || 5;
 		this.init();
-	}
+	};
 	
 	animation.prototype = {
 		init: function(){		
@@ -216,11 +452,11 @@
 		},
 		createDom: function(){
 		
-			var html = '';	
+			var html = [];	
 			for(var i = 0; i < this.length; i++){				
-				html +='<div class="mod" style="height:' + this.getHeight(i) + '%;"></div>';		
+				html.push('<div class="mod" style="height:' + this.getHeight(i) + '%;"></div>');
 			}			
-			this.wrap.innerHTML = html;
+			this.wrap.innerHTML = html.join("");
 			this.list = this.wrap.getElementsByClassName('mod');
 		},
 		actionOne: function( index ){
